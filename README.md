@@ -12,4 +12,21 @@ My learnings:
 
   -> either iterate to mathResult or map it to value/range and convert to list
 
-  
+- using iterator / list iterator.
+  val wonCards = puzzle_input.toMutableList()
+	val wonCardsIterator = wonCards.listIterator()
+
+	while (wonCardsIterator.hasNext()) {
+		var card = wonCardsIterator.next()
+		var cardNumber = pattern.find(card.substringBefore(":"))!!.value.toInt()
+		var winningNumbers = pattern.findAll(card.substringAfter(": ").split(" | ")[0]).map { it.value }.toList()
+		var numbersYouHave = pattern.findAll(card.substringAfter(": ").split(" | ")[1]).map { it.value }.toList()
+		var wins = (winningNumbers + numbersYouHave).size - (winningNumbers + numbersYouHave).distinct().size
+
+		for (i in 0..wins - 1) {
+			wonCardsIterator.add(puzzle_input[cardNumber + i])
+			wonCardsIterator.previous()
+		}
+	}  
+	-> iterator does not allow .add. This adds a new entry at the current positon
+  	-> iterator jumps over added entry, so you have to perform a .previous if you want to continue at the new entry
