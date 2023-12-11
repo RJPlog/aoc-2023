@@ -13,6 +13,7 @@ My learnings:
   -> either iterate to mathResult or map it to value/range and convert to list
 
 - using iterator / list iterator.
+  Day04:
   val wonCards = puzzle_input.toMutableList()
 	val wonCardsIterator = wonCards.listIterator()
 
