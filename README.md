@@ -31,3 +31,5 @@ My learnings:
 	}  
 	-> iterator does not allow .add. This adds a new entry at the current positon
   	-> iterator jumps over added entry, so you have to perform a .previous if you want to continue at the new entry
+
+  - optimum path 2115
