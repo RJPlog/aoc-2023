@@ -24,12 +24,15 @@ fun sandSlap(part: Int): Int {
     //    (guess this could be more efficent, if puzzleinput will be sorted by height of bricks)
     
     var move = true
+    var supportMap = mutableMapOf<Int, MutableList<Int>>()
     while (move) {//for (k in 0..5) {// while there is movement
         move = false
+        supportMap.clear()
         for (i in 0..puzzleInput.size-1) {
             var collision = false
             var brick1 = puzzleInput[i]
-            println(brick1)
+            supportMap.put(brick1.id, mutableListOf())
+            // println(brick1)
             if (brick1.zMin > 1) {
                     
                 //println("new position created, check collision: $brick1")
@@ -39,10 +42,12 @@ fun sandSlap(part: Int): Int {
                         if (((brick2.xMin <= brick1.xMax) && (brick2.xMin >= brick1.xMin)) || ((brick1.xMin <= brick2.xMax) && (brick1.xMin >= brick2.xMin))) {
                             if (((brick2.yMin <= brick1.yMax) && (brick2.yMin >= brick1.yMin)) || ((brick1.yMin <= brick2.yMax) && (brick1.yMin >= brick2.yMin))) {
                                 if (((brick2.zMin <= brick1.zMax-1) && (brick2.zMin >= brick1.zMin-1)) || ((brick1.zMin-1 <= brick2.zMax) && (brick1.zMin-1 >= brick2.zMin))) {
-                                    println("Überschneidung brick ${brick1.id} und ${brick2.id}")
-                                    println("   ${brick1}")
-                                    println("   ${brick2}")
+                                  //  println("Überschneidung brick ${brick1.id} und ${brick2.id}")
+                                  //  println("   ${brick1}")
+                                  //  println("   ${brick2}")
                                     collision = true
+                                    var help = supportMap.getValue(brick1.id)
+                                    help.add(brick2.id)
                                 }              
                             }               
                         }
@@ -70,12 +75,21 @@ fun sandSlap(part: Int): Int {
     //    println(it)
     //}
 
-    // #3 check for each bricks by whom it is supported
+    // #3 check for each bricks by whom it is supported  -> why no set up a map each cycle and store all id and it's supports
+    //println(supportMap)
 
     // #4 ceck for all supporting bricks if there is any brick which is additinally supported by another brick, count all bricks which are not single supporters
+    var result = 0
+    for (id in 0..supportMap.size-1) {
+        var singleSupport = false
+        for ((key,value) in supportMap) {
+            if (value.contains(id) && value.size == 1) singleSupport = true 
+        }
+        if (!singleSupport) result +=1
+    }
 
 
-    return -1
+    return result
 }
 
   
