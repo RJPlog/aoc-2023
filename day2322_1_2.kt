@@ -51,23 +51,81 @@ fun sandSlab(part: Int): Int {
     }
 
     // #4 ceck for all supporting bricks if there is any brick which is additinally supported by another brick, count all bricks which are not single supporters
+    // #5 generate list of bricks wich are single support (singleSupp) for Part2
     var result = 0
+    var singleSupp = mutableListOf<Int>()
     for (id in 0..supportMap.size-1) {
         var singleSupport = false
         for ((key,value) in supportMap) {
             if (value.contains(id) && value.size == 1) singleSupport = true 
         }
-        if (!singleSupport) result +=1
+        if (!singleSupport) result +=1 else singleSupp.add(id)
     }
     if (part == 1) return result
 
     result = 0
     // idea for part2: puzzleInput contains all bricks after situation is stable (this was already calculated)
-    // generate list of bricks wich are single support
+
     // for all single support bricks, 
+    singleSupp.forEach {
         //  copy puzzleInput into newList (just not to change stable state of part one)
+        var id = it
+        var pINew = mutableListOf<Brick>()
+        puzzleInput.forEach{
+            if (it.id != id) {
+                val bID = it.id
+                val bxMin = it.xMin
+                val bxMax = it.xMax
+                val byMin = it.yMin
+                val byMax = it.yMax
+                val bzMin = it.zMin
+                val bzMax = it.zMax
+                pINew.add(Brick(bID, bxMin, bxMax, byMin, byMax, bzMin, bzMax))
+            }
+        }
+
         //  remove single support brick and start run until stable. At the end, compare to initial state and count id's wich have moved 
-    // add up the result
+        move = true
+        while (move) {
+            move = false
+            for (i in 0..pINew.size-1) {
+                var collision = false
+                var brick1 = pINew[i]
+                if (brick1.zMin > 1) {
+                    for (j in 0..pINew.size-1) {
+                        if (i != j) {
+                            val brick2 = pINew[j]
+                            if (((brick2.xMin <= brick1.xMax) && (brick2.xMin >= brick1.xMin)) || ((brick1.xMin <= brick2.xMax) && (brick1.xMin >= brick2.xMin))) {
+                                if (((brick2.yMin <= brick1.yMax) && (brick2.yMin >= brick1.yMin)) || ((brick1.yMin <= brick2.yMax) && (brick1.yMin >= brick2.yMin))) {
+                                    if (((brick2.zMin <= brick1.zMax-1) && (brick2.zMin >= brick1.zMin-1)) || ((brick1.zMin-1 <= brick2.zMax) && (brick1.zMin-1 >= brick2.zMin))) {
+                                        collision = true
+                                    }              
+                                }               
+                            }
+                        }
+                    }
+                if (!collision) {
+                    pINew[i].zMin -=1
+                    pINew[i].zMax -=1
+                    move = true
+                }
+                }
+            }
+        }
+
+        // add up the result
+        pINew.forEach {
+            var piNewElement = it
+            puzzleInput.forEach {
+                var puzzleInputElement = it
+                if (piNewElement.id == puzzleInputElement.id) {
+                    if (piNewElement != puzzleInputElement) {
+                        result += 1
+                    }
+                }
+            }
+        }
+    }
 
     return result
 }
