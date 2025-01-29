@@ -4,20 +4,16 @@
 import java.io.File
 
 fun move(sI: Pair<Int,Int>, dir: Char, eI: Pair<Int,Int>, j: MutableMap<Pair<Int,Int>,Char>, count: Int): Int {
-
-    //if (count == 15) return 0
-    //print("move $sI, $dir:") 
-    //println()
     var result = mutableListOf(0)
     if (sI == eI) {
-        result.add(1)
+        result.add(0)
     } else {
         // up
-            if (dir != 'd' && j.containsKey(Pair(sI.first, sI.second-1))) {
-                if (j.getValue(Pair(sI.first, sI.second-1)) != 'v') {
-                    result.add(1 + move(Pair(sI.first, sI.second-1), 'u', eI, j, count +1 ))
-                }
+        if (dir != 'd' && j.containsKey(Pair(sI.first, sI.second-1))) {
+            if (j.getValue(Pair(sI.first, sI.second-1)) != 'v') {
+                result.add(1 + move(Pair(sI.first, sI.second-1), 'u', eI, j, count +1 ))
             }
+        }
         // right
         if (dir != 'l' && j.containsKey(Pair(sI.first+1, sI.second))) {
             if (j.getValue(Pair(sI.first+1, sI.second)) != '<') {
@@ -38,7 +34,6 @@ fun move(sI: Pair<Int,Int>, dir: Char, eI: Pair<Int,Int>, j: MutableMap<Pair<Int
         }
     }
     result.sortDescending()
-    //println(result)
     return result[0]
 }
 
@@ -61,11 +56,10 @@ fun aocDay2323(part: Int = 1): Int {
             y+=1
     }
 
-    //println(junctions)
     val startIndex = Pair(pI.indexOf(".") % w, pI.indexOf(".") / w)
     val endIndex = Pair(pI.lastIndexOf(".") % w, pI.lastIndexOf(".") / w)
 
-    val result = move(startIndex, 'd', endIndex, junctions, 1) 
+    val result = move(startIndex, 'd', endIndex, junctions, 1)
     return result
 }
 
@@ -77,7 +71,7 @@ fun main() {
     println("--- Day 23: A Long Walk ---")
 
     var solution1 = aocDay2323(1)
-    println("   the longest hike is $solution1 steps long")  // 2219 is to high
+    println("   the longest hike is $solution1 steps long")
 
     t1 = System.currentTimeMillis() - t1
     println("puzzle solved in ${t1} ms")
