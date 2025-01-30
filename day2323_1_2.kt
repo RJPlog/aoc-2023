@@ -9,39 +9,38 @@ fun move2(sI: Pair<Int,Int>, dir: Char, eI: Pair<Int,Int>, j: MutableMap<Pair<In
     if (sI == eI) {
         result.add(0)
         println(count)
-        return 0
+        return count
     } else {
         // up
         if (dir != 'd' && j.containsKey(Pair(sI.first, sI.second-1))) {
             var newJU = mutableMapOf<Pair<Int,Int>,Char>()
             newJU.putAll(j)
             newJU.remove(Pair(sI.first, sI.second),'.')
-            result.add(1 + move2(Pair(sI.first, sI.second-1), 'u', eI, newJU, count +1))
+            result.add(move2(Pair(sI.first, sI.second-1), 'u', eI, newJU, count +1))
         }
         // right
         if (dir != 'l' && j.containsKey(Pair(sI.first+1, sI.second))) {
             var newJR = mutableMapOf<Pair<Int,Int>,Char>()
             newJR.putAll(j)
             newJR.remove(Pair(sI.first, sI.second),'.')
-            result.add(1 + move2(Pair(sI.first+1, sI.second), 'r', eI, newJR, count +1))
+            result.add(move2(Pair(sI.first+1, sI.second), 'r', eI, newJR, count +1))
         }
         // down
         if (dir != 'u' && j.containsKey(Pair(sI.first, sI.second+1))) {
             var newJD = mutableMapOf<Pair<Int,Int>,Char>()
             newJD.putAll(j)
             newJD.remove(Pair(sI.first, sI.second),'.')
-            result.add(1 + move2(Pair(sI.first, sI.second+1), 'd', eI, newJD, count +1))
+            result.add(move2(Pair(sI.first, sI.second+1), 'd', eI, newJD, count +1))
         }
         // left
         if (dir != 'r' && j.containsKey(Pair(sI.first-1, sI.second))) {
             var newJL = mutableMapOf<Pair<Int,Int>,Char>()
             newJL.putAll(j)
             newJL.remove(Pair(sI.first, sI.second),'.')
-            result.add(1 + move2(Pair(sI.first-1, sI.second), 'l', eI, newJL, count +1))
+            result.add(move2(Pair(sI.first-1, sI.second), 'l', eI, newJL, count +1))
         }
     }
     result.sortDescending()
-    println(result)
     return result[0]
 }
 
@@ -114,7 +113,7 @@ var pI = ""
     if (part == 1) {
         result = move(startIndex, 'd', endIndex, junctions, 1)
     } else {
-        result = move2(startIndex, 'd', endIndex, junctions, 2)
+        result = move2(startIndex, 'd', endIndex, junctions, 1)
     } 
     return result
 }
@@ -135,3 +134,4 @@ fun main() {
     t1 = System.currentTimeMillis() - t1
     println("puzzle solved in ${t1} ms")
 }
+
