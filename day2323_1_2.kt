@@ -4,6 +4,8 @@
 import java.io.File
 
 fun move2(sI: Pair<Int,Int>, dir: Char, eI: Pair<Int,Int>, j: MutableMap<Pair<Int,Int>,Char>, count: Int): Int {
+    println(".".repeat(count) + count + sI+ "," + eI)
+    // why do I not reach the end?
     var result = mutableListOf(0)
     if (sI == eI) {
         result.add(0)
@@ -77,6 +79,62 @@ fun move(sI: Pair<Int,Int>, dir: Char, eI: Pair<Int,Int>, j: MutableMap<Pair<Int
     }
     result.sortDescending()
     return result[0]
+}
+
+
+
+fun aocDay2323(part: Int = 1): Int {
+var junctions = mutableMapOf<Pair<Int, Int>, Char>()
+var y = 0
+var w = 0
+
+var pI = ""
+    File("day2323_puzzle_input.txt").forEachLine {
+            var x = 0
+            pI += it
+            w = it.length
+            it.forEach{
+                if (it!='#') {
+                    if (part == 1) {
+                        junctions.put(Pair(x,y), it)
+                    } else {
+                        junctions.put(Pair(x,y), '.')
+                    }
+                    
+                }
+                x+=1
+            }
+            y+=1
+    }
+
+    val startIndex = Pair(pI.indexOf(".") % w, pI.indexOf(".") / w)
+    val endIndex = Pair(pI.lastIndexOf(".") % w, pI.lastIndexOf(".") / w)
+    println(endIndex)
+
+    var result = 0
+    if (part == 1) {
+        result = move(startIndex, 'd', endIndex, junctions, 1)
+    } else {
+        result = move2(startIndex, 'd', endIndex, junctions, 1)
+    } 
+    return result
+}
+
+
+fun main() {
+
+    var t1 = System.currentTimeMillis()
+
+    println("--- Day 23: A Long Walk ---")
+
+    var solution1 = aocDay2323(1)
+    println("   the longest hike is $solution1 steps long")
+
+    var solution2 = aocDay2323(2)
+    println("   the longest hike is $solution2 steps long")
+
+    t1 = System.currentTimeMillis() - t1
+    println("puzzle solved in ${t1} ms")
 }
 
 
