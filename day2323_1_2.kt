@@ -5,6 +5,29 @@ import java.io.File
 
 var roads = mutableMapOf<String, Int>()
 
+fun move3(sI: String, eI: String, crossings: MutableMap<String, Int>): Int {
+    var result = mutableListOf(0)
+    for((key, value) in crossings) {
+        if (key.split("-")[0] == sI || key.split("-")[1] == sI) {
+            if (key.split("-")[0] == eI || key.split("-")[1] == eI) {
+                result.add(value)
+                println("end reached")
+            } else {
+                var nextsI = key.split("-")[0]
+                if (key.split("-")[0] == sI) nextsI = key.split("-")[1]
+                var newCrossings = mutableMapOf<String, Int>()
+                for ((key,value) in crossings) {
+                    if (!key.split("-").contains(sI))
+                    newCrossings.put(key, value)
+                }
+                result.add(value + move3(nextsI, eI, newCrossings))
+            }
+        }
+    }
+    result.sortDescending()
+    return result[0]
+}
+
 fun move(sI: Pair<Int,Int>, dir: Char, eI: Pair<Int,Int>, j: MutableMap<Pair<Int,Int>,Char>, count: Int, startCrossing: Int, laneCount: Int, w: Int): Int {
     var result = mutableListOf(0)
     if (sI == eI) {
@@ -88,9 +111,16 @@ var pI = ""
         result = move(startIndex, 'd', endIndex, junctions, 1, pI.indexOf("."), 0, w )
         println("--------roads---------------")
         println(roads)
+        for ((key,value) in roads) {
+            var ends = key.split("-")
+            println("${ends[0].toInt() % w}-${ends[0].toInt() / w} to ${ends[1].toInt() % w}-${ends[1].toInt() / w} takes $value steps")
+        }
         println("----------------------------")
     } else {
-        result = move2(startIndex, 'd', endIndex, junctions, 1)
+        //result = move2(startIndex, 'd', endIndex, junctions, 1)
+        var roadsPart2 = mutableMapOf<String, Int>()
+        roadsPart2.putAll(roads)
+        result = move3(pI.indexOf(".").toString(), pI.lastIndexOf(".").toString(), roadsPart2)
     } 
     return result
 }
