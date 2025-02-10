@@ -1,13 +1,11 @@
 // sudo apt-get update && sudo apt-get install kotlin
-// kotlinc day2323_1_2.kt -include-runtime -d day2323_1_2.jar && java -jar -Xss515m day2323_1_2.jar
+// kotlinc day2319_1_2.kt -include-runtime -d day2319_1_2.jar && java -jar -Xss515m day2319_1_2.jar
 
 import java.io.File
 
 var rules = mutableMapOf<String, String>()
 
-fun day2319part2(xMin: Int, xMax: Int, mMin: Int, mMax: Int, aMin: Int, aMax: Int, sMin: Int, sMax: Int, rule: String): Long {
-    
-    //println((" ").repeat(count) + "call rule: $rule")
+fun aocDay2319part2(xMin: Int, xMax: Int, mMin: Int, mMax: Int, aMin: Int, aMax: Int, sMin: Int, sMax: Int, rule: String): Long {
      
     var result = 0L
     var xMi = xMin
@@ -20,12 +18,9 @@ fun day2319part2(xMin: Int, xMax: Int, mMin: Int, mMax: Int, aMin: Int, aMax: In
     var sMa = sMax
     
     if (rule == "A") {
-        //println("$xMi, $xMa, $mMi, $mMa, $aMi, $aMa, $sMi, $sMa")
-        //println((xMa -xMi + 1).toLong()*(mMa - mMi + 1).toLong()*(aMa -aMi + 1).toLong()*(sMa -sMi + 1).toLong())
          return  ((xMa -xMi + 1).toLong()*(mMa - mMi + 1).toLong()*(aMa -aMi + 1).toLong()*(sMa -sMi + 1).toLong())
     }
     if (rule == "R") return 0L
-    //if (count > 3) return 0
     
     var cond = rule.substringBefore(":")
     var trueRule = rule.substringAfter(":").substringBefore(",")
@@ -43,7 +38,7 @@ fun day2319part2(xMin: Int, xMax: Int, mMin: Int, mMax: Int, aMin: Int, aMax: In
         "s<" -> sMa = cond.drop(2).toInt()-1
     }
     if (!trueRule.contains(":") && trueRule != "A" && trueRule != "R") trueRule = rules.getValue(trueRule)
-    result += aplenty(xMi, xMa, mMi, mMa, aMi, aMa, sMi, sMa, trueRule)
+    result += aocDay2319part2(xMi, xMa, mMi, mMa, aMi, aMa, sMi, sMa, trueRule)
     
     xMi = xMin
     xMa = xMax
@@ -53,7 +48,6 @@ fun day2319part2(xMin: Int, xMax: Int, mMin: Int, mMax: Int, aMin: Int, aMax: In
     aMa = aMax
     sMi = sMin
     sMa = sMax
-    
     
     // false path
         when (cond.take(2)) {
@@ -67,7 +61,7 @@ fun day2319part2(xMin: Int, xMax: Int, mMin: Int, mMax: Int, aMin: Int, aMax: In
         "s>" -> sMa = cond.drop(2).toInt()
     }
    	if (!falseRule.contains(":") && falseRule != "A" && falseRule != "R") falseRule = rules.getValue(falseRule)
-    result += aplenty(xMi, xMa, mMi, mMa, aMi, aMa, sMi, sMa, falseRule)
+    result += aocDay2319part2(xMi, xMa, mMi, mMa, aMi, aMa, sMi, sMa, falseRule)
         
     return result
 } 
@@ -79,10 +73,15 @@ fun main() {
 
     println("--- Day 19: Aplenty ---")
 
+    File("day2319_puzzle_input.txt").forEachLine{
+        if (it.take(1) != "{" && it != "")
+        rules.put(it.split("{")[0], it.split("{")[1].dropLast(1))
+    }
+
     //var solution1 = aocDay2319part1()
     //println("   the longest hike is $solution1 steps long")
 
-    var solution2 = aocDay2319oart2(1, 4000, 1, 4000, 1, 4000, 1, 4000, rules.getValue("in"))
+    var solution2 = aocDay2319part2(1, 4000, 1, 4000, 1, 4000, 1, 4000, rules.getValue("in"))
     println("   $solution2 distinct combinations of ratings will be accepted ")
 
     t1 = System.currentTimeMillis() - t1
